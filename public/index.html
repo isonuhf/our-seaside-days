@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#102f46">
+  <title>我们的海边日常 · 登录</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-display: "Noto Serif SC", "Songti SC", STSong, serif;
+      --font-body: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      --ink: #fff;
+      --muted: rgba(255, 255, 255, .68);
+      --line: rgba(255, 255, 255, .22);
+      --sky: #1d8fb8;
+      --deep: #081a29;
+      --warm: #b69d7c;
+      color-scheme: dark;
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      min-height: 100dvh;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--sky);
+      font-family: var(--font-body);
+    }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .viewport {
+      position: relative;
+      min-height: 100dvh;
+      isolation: isolate;
+      overflow: hidden;
+      background: var(--sky);
+    }
+    .bg, .scrim, .grain { position: absolute; inset: 0; pointer-events: none; }
+    .bg { z-index: -3; overflow: hidden; background: var(--sky); }
+    .bg-image {
+      position: absolute;
+      inset: 0;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      filter: brightness(1.08) saturate(.98) contrast(.98);
+      transform: translate3d(0, 0, 0);
+      will-change: opacity;
+    }
+    .bg-image--one {
+      background-image: url('/images/bg-1.jpg');
+      animation: backgroundOne 20s ease-in-out infinite;
+    }
+    .bg-image--two {
+      background-image: url('/images/bg-2.jpg');
+      animation: backgroundTwo 20s ease-in-out infinite;
+    }
+    .scrim {
+      z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(4, 26, 39, .30) 0%, rgba(4, 26, 39, .12) 34%, rgba(4, 26, 39, .03) 72%, rgba(4, 26, 39, .05) 100%),
+        linear-gradient(180deg, rgba(4, 26, 39, .06) 0%, rgba(4, 26, 39, .02) 54%, rgba(4, 26, 39, .22) 100%);
+    }
+    .grain {
+      z-index: 5;
+      opacity: .055;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.48'/%3E%3C/svg%3E");
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100dvh;
+      flex-direction: column;
+      padding: clamp(26px, 4vw, 58px) clamp(22px, 5vw, 80px) clamp(24px, 4.5vw, 64px);
+    }
+    .brand {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      text-decoration: none;
+      animation: rise .8s cubic-bezier(.22,.65,.28,1) both;
+      display: none;
+    }
+    .brand-mark { width: 27px; height: 27px; flex: 0 0 auto; }
+    .wordmark {
+      font-size: 23px;
+      font-weight: 400;
+      letter-spacing: .28px;
+    }
+
+    .content {
+      display: flex;
+      width: min(100%, 1270px);
+      flex: 1;
+      align-items: center;
+      padding: clamp(34px, 6vh, 74px) 0 clamp(36px, 7vh, 88px);
+    }
+    .intro {
+      width: min(100%, 505px);
+      padding: clamp(24px, 3vw, 44px);
+      border: 1px solid rgba(255, 255, 255, .21);
+      border-radius: 10px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .23), rgba(255, 255, 255, .10) 48%, rgba(13, 32, 42, .18)),
+        rgba(7, 24, 35, .28);
+      box-shadow: 0 24px 70px rgba(0, 10, 20, .25), inset 0 1px 0 rgba(255,255,255,.17);
+      backdrop-filter: blur(22px) saturate(.88);
+      -webkit-backdrop-filter: blur(22px) saturate(.88);
+      animation: rise .9s .08s cubic-bezier(.22,.65,.28,1) both;
+    }
+    .eyebrow {
+      margin: 0 0 20px;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 11ch;
+      margin: 0;
+      color: rgba(255,255,255,.93);
+      font-family: var(--font-display);
+      font-size: clamp(51px, 5.35vw, 82px);
+      font-weight: 400;
+      letter-spacing: .01em;
+      line-height: .91;
+    }
+    .lede {
+      max-width: 37ch;
+      margin: 25px 0 0;
+      color: rgba(255,255,255,.72);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .login {
+      margin-top: 28px;
+      padding-top: 23px;
+      border-top: 1px solid rgba(255,255,255,.23);
+    }
+    .login-heading {
+      margin: 0 0 17px;
+      color: rgba(255,255,255,.94);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -.015em;
+    }
+    .field { display: block; margin-top: 13px; }
+    .field-label {
+      display: block;
+      margin: 0 0 7px;
+      color: rgba(255,255,255,.74);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .input-wrap { position: relative; }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%;
+      height: 46px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 4px;
+      outline: 0;
+      color: #fff;
+      background: rgba(7, 22, 31, .24);
+      font-size: 14px;
+      transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    input::placeholder { color: rgba(255,255,255,.42); }
+    input:focus {
+      border-color: rgba(255,255,255,.8);
+      background: rgba(7, 22, 31, .37);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.10);
+    }
+    .password-input { padding-right: 49px !important; }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 7px;
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 0;
+      border-radius: 3px;
+      color: rgba(255,255,255,.64);
+      background: transparent;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: color .2s ease, background .2s ease;
+    }
+    .toggle-password:hover, .toggle-password:focus-visible { color: #fff; background: rgba(255,255,255,.10); outline: 0; }
+    .toggle-password svg { width: 17px; height: 17px; }
+    .form-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 19px; }
+    .remember { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,.62); font-size: 12px; cursor: pointer; }
+    .remember input { width: 14px; height: 14px; margin: 0; accent-color: #fff; }
+    .quiet-link { color: rgba(255,255,255,.78); font-size: 12px; text-underline-offset: 3px; }
+    .quiet-link:hover { color: #fff; }
+    .submit {
+      display: inline-flex;
+      width: 100%;
+      min-height: 47px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 0;
+      border-radius: 4px;
+      color: #07131b;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .015em;
+      transition: transform .24s ease, background .24s ease, box-shadow .24s ease;
+    }
+    .submit svg { width: 16px; height: 16px; transition: transform .24s ease; }
+    .submit:hover, .submit:focus-visible { background: #eef2f3; box-shadow: 0 9px 24px rgba(0,0,0,.18); outline: 0; transform: translateY(-1px); }
+    .submit:hover svg { transform: translateX(3px); }
+    .submit:active { transform: translateY(0); }
+    .form-message { min-height: 19px; margin: 11px 0 0; color: rgba(255,255,255,.76); font-size: 12px; line-height: 1.45; }
+    .form-message[data-state="error"] { color: #ffd7c2; }
+    .form-message[data-state="success"] { color: #dff6d2; }
+    .signup { margin: 18px 0 0; color: rgba(255,255,255,.57); font-size: 12px; text-align: center; }
+    .signup a { color: rgba(255,255,255,.88); font-weight: 600; text-underline-offset: 3px; }
+
+    .bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      color: rgba(255,255,255,.58);
+      animation: rise .8s .22s cubic-bezier(.22,.65,.28,1) both;
+      display: none;
+    }
+    .tagline { max-width: 38ch; margin: 0; font-size: 11px; line-height: 1.45; }
+    .legal { margin: 0; font-size: 11px; white-space: nowrap; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes backgroundOne {
+      0%, 40% { opacity: 1; }
+      50%, 90% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes backgroundTwo {
+      0%, 40% { opacity: 0; }
+      50%, 90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @media (min-width: 761px) {
+      .intro { padding: 28px 32px 22px; }
+      .eyebrow { margin-bottom: 14px; }
+      h1 { font-size: clamp(48px, 4.9vw, 76px); }
+      .lede { margin-top: 18px; font-size: 14px; }
+      .login { margin-top: 21px; padding-top: 18px; }
+      .login-heading { margin-bottom: 13px; }
+      .field { margin-top: 9px; }
+      input[type="email"], input[type="password"], input[type="text"] { height: 41px; }
+      .form-meta { margin: 11px 0 14px; }
+      .submit { min-height: 43px; }
+      .signup { margin-top: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .viewport { min-height: 100svh; }
+      .bg-image { background-position: center center; }
+      .scrim { background: linear-gradient(180deg, rgba(5,20,31,.08) 0%, rgba(5,20,31,.02) 45%, rgba(6,18,26,.20) 100%); }
+      .shell { min-height: 100svh; padding: 22px 20px 22px; }
+      .content { align-items: flex-start; justify-content: center; padding: clamp(48px, 10vh, 84px) 0 50px; }
+      .intro { width: min(100%, 500px); padding: 27px 22px 24px; }
+      h1 { font-size: clamp(52px, 15vw, 76px); }
+      .lede { font-size: 14px; }
+      .login { margin-top: 29px; padding-top: 23px; }
+      h1 { max-width: 8ch; }
+      .bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .tagline { max-width: 34ch; }
+    }
+    @media (max-width: 380px) {
+      .shell { padding-inline: 15px; }
+      .intro { padding-inline: 18px; }
+      .form-meta { align-items: flex-start; flex-direction: column; gap: 11px; }
+      .quiet-link { order: -1; }
+      h1 { font-size: 49px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewport">
+    <div class="bg" aria-hidden="true">
+      <div class="bg-image bg-image--one"></div>
+      <div class="bg-image bg-image--two"></div>
+    </div>
+    <div class="scrim" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="shell">
+      
+        
+          <path fill="currentColor" d="M45.13 1.28h9.74v41.14l-9.74-4.33zM79.47 12.1l8.43 8.43L58.8 49.62l-5.35-11.49zM98.72 45.13v9.74H57.58l4.33-9.74zM87.9 79.47l-8.43 8.43-29.09-29.1 11.49-5.35zM54.87 98.72h-9.74V57.58l9.74 4.33zM20.53 87.9l-8.43-8.43 29.1-29.09 5.35 11.49zM1.28 54.87v-9.74h41.14l-4.33 9.74zM12.1 20.53l8.43-8.43 29.09 29.1-11.49 5.35z"/>
+        </svg>
+        
+      
+
+      <section class="content" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">写给海风里的我们</p>
+          <h1 id="page-title">和你</h1>
+          <h1 id="page-title">慢慢</h1>
+          <p class="lede">海风会记得我们的拥抱，潮汐会替我一遍遍说：遇见你，是我最温柔的幸运。</p>
+
+          <form class="login" id="login-form" novalidate>
+            <h2 class="login-heading">登录我们的日常</h2>
+            <label class="field">
+              <span class="field-label">邮箱地址</span>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="输入邮箱地址" required>
+            </label>
+            <label class="field">
+              <span class="field-label">密码</span>
+              <span class="input-wrap">
+                <input class="password-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="输入密码" minlength="6" required>
+                <button class="toggle-password" id="toggle-password" type="button" aria-label="显示密码" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+                </button>
+              </span>
+            </label>
+            <div class="form-meta">
+              <label class="remember"><input type="checkbox" name="remember"> <span>记住我</span></label>
+              <a class="quiet-link" href="#forgot">忘记密码？</a>
+            </div>
+            <button class="submit" type="submit">进入我们的世界 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10.2M8.8 3.9 12.9 8l-4.1 4.1"/></svg></button>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+            <p class="signup">还没有账号？<a href="#request-access">申请加入我们的故事</a></p>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const form = document.querySelector('#login-form');
+      const email = document.querySelector('#email');
+      const password = document.querySelector('#password');
+      const toggle = document.querySelector('#toggle-password');
+      const message = document.querySelector('#form-message');
+
+      toggle.addEventListener('click', () => {
+        const visible = password.type === 'text';
+        password.type = visible ? 'password' : 'text';
+        toggle.setAttribute('aria-pressed', String(!visible));
+        toggle.setAttribute('aria-label', visible ? '显示密码' : '隐藏密码');
+        toggle.innerHTML = visible
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18M10.6 5.9A10.6 10.6 0 0 1 12 5.8c6.5 0 10 6.2 10 6.2a17.7 17.7 0 0 1-3.2 3.8M6.1 6.7C3.4 8.3 2 12 2 12s3.5 6.2 10 6.2c1.3 0 2.4-.2 3.4-.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        message.textContent = '';
+        message.dataset.state = '';
+        if (!email.value.trim() || !email.validity.valid) {
+          message.textContent = '请输入正确的邮箱地址。';
+          message.dataset.state = 'error';
+          email.focus();
+          return;
+        }
+        if (password.value.length < 6) {
+          message.textContent = '密码至少需要 6 个字符。';
+          message.dataset.state = 'error';
+          password.focus();
+          return;
+        }
+        message.textContent = '欢迎回来，今天也要和你一起开心。';
+        message.dataset.state = 'success';
+      });
+    })();
+  </script>
+</body>
+</html>
