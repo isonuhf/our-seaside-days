@@ -748,6 +748,53 @@ layout: false
     .state-mfa .mfa-panel { transform: translateY(0); }
     .state-mfa .shell { opacity: 0; pointer-events: none; transform: scale(.985); }
 
+    .mfa-management {
+      position: fixed;
+      z-index: 19;
+      inset: 0;
+      display: grid;
+      padding: 24px;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(5, 25, 36, .2);
+      transition: opacity .4s ease;
+    }
+    .mfa-manage-panel {
+      width: min(100%, 500px);
+      max-height: calc(100dvh - 48px);
+      overflow-y: auto;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 8px;
+      color: rgba(255,255,255,.94);
+      background: rgba(7, 27, 38, .78);
+      box-shadow: 0 28px 80px rgba(0,15,25,.34), inset 0 1px 0 rgba(255,255,255,.13);
+      backdrop-filter: blur(22px) saturate(.9);
+      transform: translateY(15px);
+      transition: transform .45s cubic-bezier(.16,1,.3,1);
+    }
+    .state-mfa-management .mfa-management { opacity: 1; pointer-events: auto; }
+    .state-mfa-management .mfa-manage-panel { transform: translateY(0); }
+    .mfa-manage-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+    .mfa-manage-head h2 { margin: 0; font-family: var(--font-display); font-size: 32px; font-weight: 400; line-height: 1.2; }
+    .mfa-manage-kicker { margin: 0 0 11px; color: rgba(255,255,255,.58); font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+    .mfa-manage-copy { margin: 13px 0 0; color: rgba(255,255,255,.68); font-size: 13px; line-height: 1.75; }
+    .mfa-device-list { display: grid; gap: 10px; margin-top: 22px; }
+    .mfa-device-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px; border: 1px solid rgba(255,255,255,.15); border-radius: 5px; background: rgba(255,255,255,.06); }
+    .mfa-device-info { min-width: 0; }
+    .mfa-device-name-label { overflow: hidden; color: rgba(255,255,255,.94); font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .mfa-device-meta { margin-top: 5px; color: rgba(255,255,255,.53); font-size: 10px; letter-spacing: .05em; }
+    .mfa-device-delete { flex: 0 0 auto; min-height: 34px; padding: 0 11px; border: 1px solid rgba(255,194,175,.48); border-radius: 4px; color: #ffd5c5; background: transparent; cursor: pointer; font-size: 11px; }
+    .mfa-device-delete:hover, .mfa-device-delete:focus-visible { border-color: #ffd5c5; background: rgba(255,213,197,.1); outline: 0; }
+    .mfa-device-delete:disabled { cursor: not-allowed; opacity: .45; }
+    .mfa-manage-message { min-height: 19px; margin: 13px 0 0; color: #ffd7c2; font-size: 12px; line-height: 1.5; }
+    .mfa-manage-actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 19px; }
+    .mfa-manage-actions button { min-height: 43px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .mfa-manage-add { border: 0; color: #0b2633; background: #f4f7f4; font-weight: 600; }
+    .mfa-manage-close { padding: 0 15px; border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.74); background: transparent; }
+    .mfa-manage-actions button:disabled { cursor: wait; opacity: .62; }
+
     /* Space redesign: a quiet editorial travel archive with a real map. */
     .space-view { color: #193b49; background: #eef2ee; }
     .space-view::before { background: radial-gradient(circle at 9% 0%, rgba(255,255,255,.96), transparent 31%), linear-gradient(135deg, rgba(34,114,124,.1), transparent 49%), #eef2ee; }
@@ -882,6 +929,10 @@ layout: false
       .mfa-panel { max-height: calc(100dvh - 32px); padding: 25px 20px; }
       .mfa-panel h2 { font-size: 28px; }
       .mfa-qr-wrap { width: 174px; }
+      .mfa-management { padding: 16px; }
+      .mfa-manage-panel { max-height: calc(100dvh - 32px); padding: 25px 20px; }
+      .mfa-manage-head h2 { font-size: 28px; }
+      .mfa-device-card { align-items: flex-start; }
     }
     @media (max-width: 380px) {
       .shell { padding-inline: 15px; }
@@ -1493,6 +1544,24 @@ layout: false
       </div>
     </section>
 
+    <section class="mfa-management" id="mfa-management" aria-labelledby="mfa-management-title" aria-hidden="true">
+      <div class="mfa-manage-panel">
+        <div class="mfa-manage-head">
+          <div>
+            <p class="mfa-manage-kicker">ACCOUNT SECURITY · TOTP</p>
+            <h2 id="mfa-management-title">验证手机</h2>
+          </div>
+        </div>
+        <p class="mfa-manage-copy">这里显示当前账号已绑定的 2FAS 验证器。删除设备前需要当前会话已经通过动态验证码。</p>
+        <div class="mfa-device-list" id="mfa-device-list" aria-live="polite"></div>
+        <p class="mfa-manage-message" id="mfa-manage-message" role="status" aria-live="polite"></p>
+        <div class="mfa-manage-actions">
+          <button class="mfa-manage-add" id="mfa-manage-add" type="button">绑定另一部手机</button>
+          <button class="mfa-manage-close" id="mfa-manage-close" type="button">完成</button>
+        </div>
+      </div>
+    </section>
+
     <section class="film-stage" id="film-stage" aria-label="回忆放映" aria-hidden="true">
       <div class="film-surround" aria-hidden="true">
         <div class="film-strip film-strip--top">
@@ -1828,6 +1897,11 @@ layout: false
       const mfaSubmit = document.querySelector('#mfa-submit');
       const mfaCancel = document.querySelector('#mfa-cancel');
       const manageMfa = document.querySelector('#manage-mfa');
+      const mfaManagement = document.querySelector('#mfa-management');
+      const mfaDeviceList = document.querySelector('#mfa-device-list');
+      const mfaManageMessage = document.querySelector('#mfa-manage-message');
+      const mfaManageAdd = document.querySelector('#mfa-manage-add');
+      const mfaManageClose = document.querySelector('#mfa-manage-close');
       const ambientAudio = document.querySelector('#ambient-audio');
       const musicDock = document.querySelector('#music-dock');
       const musicToggle = document.querySelector('#music-toggle');
@@ -2131,14 +2205,94 @@ layout: false
           const { data, error } = await supabaseClient.auth.mfa.listFactors();
           if (error) throw error;
           const verifiedCount = (data?.totp || []).filter((factor) => factor.status === 'verified').length;
-          const atLimit = verifiedCount >= maxMfaFactors;
-          manageMfa.disabled = atLimit;
-          manageMfa.textContent = atLimit ? '已绑定 2 部手机' : '绑定手机';
-          manageMfa.title = atLimit ? '最多绑定 2 部手机' : '绑定另一部手机';
+          manageMfa.disabled = false;
+          manageMfa.textContent = verifiedCount ? '管理验证手机' : '绑定手机';
+          manageMfa.title = verifiedCount ? '查看或删除已绑定的 2FAS 验证器' : '绑定第一部手机';
         } catch (_) {
           manageMfa.disabled = false;
           manageMfa.textContent = '绑定手机';
         }
+      };
+
+      const closeMfaManagement = () => {
+        mfaManagement.setAttribute('aria-hidden', 'true');
+        app.classList.remove('state-mfa-management');
+        mfaManageMessage.textContent = '';
+      };
+
+      const renderMfaManagement = (factors) => {
+        const verifiedFactors = factors.filter((factor) => factor.status === 'verified');
+        mfaDeviceList.replaceChildren();
+        if (!verifiedFactors.length) {
+          const empty = document.createElement('p');
+          empty.className = 'mfa-device-meta';
+          empty.textContent = '当前还没有已验证的手机。';
+          mfaDeviceList.append(empty);
+        }
+        verifiedFactors.forEach((factor, index) => {
+          const card = document.createElement('article');
+          card.className = 'mfa-device-card';
+          const info = document.createElement('div');
+          info.className = 'mfa-device-info';
+          const name = document.createElement('div');
+          name.className = 'mfa-device-name-label';
+          name.textContent = factor.friendly_name || `验证手机 ${index + 1}`;
+          const meta = document.createElement('div');
+          meta.className = 'mfa-device-meta';
+          meta.textContent = factor.created_at
+            ? `TOTP · 已验证 · ${new Date(factor.created_at).toLocaleDateString('zh-CN')}`
+            : 'TOTP · 已验证';
+          info.append(name, meta);
+          const remove = document.createElement('button');
+          remove.className = 'mfa-device-delete';
+          remove.type = 'button';
+          remove.dataset.factorId = factor.id;
+          remove.textContent = '删除';
+          remove.disabled = verifiedFactors.length <= 1;
+          remove.title = remove.disabled ? '至少保留一部验证手机' : '删除这部验证手机';
+          card.append(info, remove);
+          mfaDeviceList.append(card);
+        });
+        mfaManageAdd.disabled = verifiedFactors.length >= maxMfaFactors;
+        mfaManageAdd.textContent = verifiedFactors.length >= maxMfaFactors ? '已绑定 2 部手机' : '绑定另一部手机';
+      };
+
+      const refreshMfaManagement = async () => {
+        const client = getSupabaseClient();
+        const { data, error } = await client.auth.mfa.listFactors();
+        if (error) throw error;
+        renderMfaManagement(data?.totp || []);
+      };
+
+      const openMfaManagement = async () => {
+        const client = getSupabaseClient();
+        const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (assurance.error) throw assurance.error;
+        if (assurance.data.currentLevel !== 'aal2') throw new Error('MFA_REQUIRED');
+        await refreshMfaManagement();
+        mfaManageMessage.textContent = '';
+        mfaManagement.setAttribute('aria-hidden', 'false');
+        app.classList.add('state-mfa-management');
+      };
+
+      const deleteMfaFactor = async (factorId) => {
+        const client = getSupabaseClient();
+        const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (assurance.error || assurance.data.currentLevel !== 'aal2') throw new Error('MFA_REQUIRED');
+        const { data, error } = await client.auth.mfa.listFactors();
+        if (error) throw error;
+        const verifiedFactors = (data?.totp || []).filter((factor) => factor.status === 'verified');
+        if (verifiedFactors.length <= 1) throw new Error('MFA_LAST_FACTOR');
+        const selected = verifiedFactors.find((factor) => factor.id === factorId);
+        if (!selected) throw new Error('MFA_FACTOR_NOT_FOUND');
+        const deviceName = selected.friendly_name || '这部验证手机';
+        if (!window.confirm(`确定删除“${deviceName}”吗？删除后需要使用剩余手机登录。`)) return;
+        mfaManageMessage.textContent = '正在删除验证手机…';
+        const { error: unenrollError } = await client.auth.mfa.unenroll({ factorId });
+        if (unenrollError) throw unenrollError;
+        await refreshMfaManagement();
+        mfaManageMessage.textContent = '验证手机已删除。';
+        await updateMfaManagement();
       };
 
       const showMfaEnrollment = async (target = 'film') => {
@@ -3220,15 +3374,43 @@ layout: false
       manageMfa.addEventListener('click', async () => {
         try {
           const client = getSupabaseClient();
-          const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel();
-          if (assurance.error || assurance.data.currentLevel !== 'aal2') {
-            throw assurance.error || new Error('MFA_REQUIRED');
+          const { data } = await client.auth.mfa.listFactors();
+          const verifiedCount = (data?.totp || []).filter((factor) => factor.status === 'verified').length;
+          if (!verifiedCount) {
+            await showMfaEnrollment('space');
+            return;
           }
+          await openMfaManagement();
+        } catch (error) {
+          window.alert(error?.message === 'MFA_FACTOR_LIMIT'
+            ? '当前账号已经绑定 2 部手机，请在“管理验证手机”中删除旧设备后再绑定。'
+            : error?.message === 'MFA_REQUIRED'
+              ? '请先退出并重新登录，用任意一部已绑定手机完成 2FAS 验证。'
+              : '暂时无法读取验证手机，请重新登录后再试。');
+      }
+      });
+      mfaManageClose.addEventListener('click', closeMfaManagement);
+      mfaManageAdd.addEventListener('click', async () => {
+        try {
+          closeMfaManagement();
           await showMfaEnrollment('space');
         } catch (error) {
           window.alert(error?.message === 'MFA_FACTOR_LIMIT'
-            ? '当前账号已经绑定 2 部手机。如需更换，请先在 Supabase 中删除旧验证器。'
+            ? '当前账号已经绑定 2 部手机，请先删除一部旧设备。'
             : '暂时无法绑定新手机，请重新登录后再试。');
+        }
+      });
+      mfaDeviceList.addEventListener('click', async (event) => {
+        const button = event.target.closest('.mfa-device-delete');
+        if (!button || button.disabled) return;
+        button.disabled = true;
+        try {
+          await deleteMfaFactor(button.dataset.factorId);
+        } catch (error) {
+          mfaManageMessage.textContent = error?.message === 'MFA_LAST_FACTOR'
+            ? '至少保留一部验证手机，避免账号无法登录。'
+            : '删除失败，请重新完成 2FAS 验证后再试。';
+          button.disabled = false;
         }
       });
       logout.addEventListener('click', async () => {
